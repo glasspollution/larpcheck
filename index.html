@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>larpcheck — am I larping?</title>
+<meta name="description" content="Your coding agent knows how many words you typed and how many lines it wrote. Ask it for the ratio.">
+<meta property="og:title" content="am I larping?">
+<meta property="og:description" content="Your coding agent knows how many words you typed and how many lines it wrote. Ask it for the ratio.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0F1420;
+    --ink-2:#161C2B;
+    --rule:#2A3242;
+    --vellum:#E8E2D0;
+    --vellum-2:#D8D0BA;
+    --crimson:#C41E3A;
+    --guild:#4A9B7F;
+    --text:#C3C9D6;
+    --dim:#6B7688;
+    --display:"Cinzel",Georgia,serif;
+    --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;background:var(--ink);color:var(--text);
+    font-family:var(--mono);font-size:14px;line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+    background:radial-gradient(ellipse 90% 55% at 50% -10%,rgba(196,30,58,.13),transparent 70%);
+  }
+  .wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:0 24px}
+  a{color:inherit}
+  ::selection{background:var(--crimson);color:#fff}
+  :focus-visible{outline:2px solid var(--crimson);outline-offset:3px}
+
+  .eyebrow{
+    font-size:10px;letter-spacing:.24em;text-transform:uppercase;
+    color:var(--dim);font-weight:500;
+  }
+
+  /* ---------- masthead ---------- */
+  .masthead{
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+    padding:20px 0;border-bottom:1px solid var(--rule);
+  }
+  .mark{font-family:var(--display);font-weight:800;letter-spacing:.12em;font-size:13px;color:var(--vellum)}
+  .mark span{color:var(--crimson)}
+  .masthead .eyebrow{text-align:right}
+
+  /* ---------- hero ---------- */
+  .hero{
+    display:grid;grid-template-columns:1.05fr .95fr;gap:56px;
+    align-items:center;padding:76px 0 64px;
+  }
+  h1{
+    font-family:var(--display);font-weight:800;color:var(--vellum);
+    font-size:clamp(44px,7.2vw,82px);line-height:.94;letter-spacing:-.01em;
+    margin:14px 0 0;
+  }
+  h1 em{font-style:normal;color:var(--crimson)}
+  .lede{font-size:15px;line-height:1.7;color:var(--text);margin:22px 0 0;max-width:44ch}
+  .lede b{color:var(--vellum);font-weight:500}
+
+  .install{margin-top:30px}
+  .cmd{
+    display:flex;align-items:stretch;background:var(--ink-2);
+    border:1px solid var(--rule);border-radius:2px;overflow:hidden;
+  }
+  .cmd code{
+    flex:1;min-width:0;padding:13px 14px;font-size:12px;color:var(--vellum);
+    overflow-x:auto;white-space:nowrap;scrollbar-width:none;
+  }
+  .cmd code::-webkit-scrollbar{display:none}
+  .cmd code b{color:var(--crimson);font-weight:400}
+  .copy{
+    flex:0 0 auto;border:0;border-left:1px solid var(--rule);background:transparent;
+    color:var(--dim);font-family:var(--mono);font-size:11px;letter-spacing:.1em;
+    text-transform:uppercase;padding:0 16px;cursor:pointer;transition:color .15s,background .15s;
+  }
+  .copy:hover{color:var(--vellum);background:#1D2432}
+  .copy.done{color:var(--guild)}
+  .then{margin-top:12px;font-size:12px;color:var(--dim)}
+  .then code{color:var(--vellum)}
+  .agents{margin-top:20px;display:flex;flex-wrap:wrap;gap:6px}
+  .agents span{
+    font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);
+    border:1px solid var(--rule);border-radius:99px;padding:3px 10px;
+  }
+
+  /* ---------- character sheet (signature) ---------- */
+  .sheet{
+    position:relative;background:var(--vellum);color:#1A1F2E;
+    padding:26px 26px 22px;border-radius:2px;
+    box-shadow:0 1px 0 #F5F1E4 inset,0 26px 60px -18px rgba(0,0,0,.75);
+  }
+  .sheet::after{
+    content:"";position:absolute;inset:7px;border:1px solid rgba(26,31,46,.16);
+    pointer-events:none;
+  }
+  .sheet-hd{
+    font-family:var(--display);font-size:9.5px;font-weight:600;letter-spacing:.2em;
+    text-transform:uppercase;color:#5A5344;border-bottom:1.5px solid #1A1F2E;
+    padding-bottom:9px;
+  }
+  .rank{
+    font-family:var(--display);font-weight:800;font-size:clamp(24px,3.4vw,32px);
+    letter-spacing:.02em;color:var(--crimson);margin:16px 0 0;line-height:1;
+  }
+  .ratio{
+    font-family:var(--display);font-weight:800;font-size:clamp(46px,7vw,62px);
+    line-height:.9;letter-spacing:-.02em;margin:6px 0 0;
+    font-variant-numeric:tabular-nums;
+  }
+  .ratio small{font-size:.34em;font-weight:600;letter-spacing:.08em;color:#5A5344}
+  .basis{font-size:11px;color:#5A5344;margin-top:8px}
+
+  .stats{margin:20px 0 0;border-top:1px solid rgba(26,31,46,.2);padding-top:16px}
+  .stat{display:grid;grid-template-columns:1fr 78px 22px;gap:10px;align-items:center;margin-bottom:8px}
+  .stat b{font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:#3A4152}
+  .track{height:7px;background:rgba(26,31,46,.13);border-radius:1px;overflow:hidden}
+  .fill{height:100%;background:#1A1F2E;display:block}
+  .stat i{font-style:normal;font-size:12px;font-weight:700;text-align:right;font-variant-numeric:tabular-nums}
+
+  .trophy{margin-top:18px;border-top:1px solid rgba(26,31,46,.2);padding-top:14px}
+  .trophy .eyebrow{color:#5A5344}
+  .trophy q{
+    display:block;font-family:var(--display);font-size:19px;font-weight:600;
+    color:#1A1F2E;margin:7px 0 6px;quotes:'"' '"';
+  }
+  .trophy p{margin:0;font-size:11px;color:#5A5344}
+
+  .seal{
+    position:absolute;right:-14px;bottom:-14px;width:88px;height:88px;border-radius:50%;
+    background:radial-gradient(circle at 34% 30%,#E0455E,var(--crimson) 42%,#8E1229);
+    box-shadow:0 8px 20px -4px rgba(0,0,0,.6);
+    display:grid;place-items:center;text-align:center;transform:rotate(-9deg);
+  }
+  .seal span{
+    font-family:var(--display);font-weight:800;font-size:8px;letter-spacing:.14em;
+    color:#F6E6E9;line-height:1.35;
+  }
+
+  /* ---------- sections ---------- */
+  section{border-top:1px solid var(--rule);padding:56px 0}
+  .sec-hd{display:flex;align-items:baseline;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:26px}
+  h2{
+    font-family:var(--display);font-weight:600;color:var(--vellum);
+    font-size:22px;letter-spacing:.04em;margin:6px 0 0;
+  }
+  .note{font-size:12px;color:var(--dim);max-width:52ch;margin:8px 0 0}
+
+  /* ---------- ledger ---------- */
+  .tabs{display:flex;gap:2px}
+  .tab{
+    background:transparent;border:1px solid var(--rule);color:var(--dim);
+    font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+    padding:6px 13px;cursor:pointer;transition:.15s;
+  }
+  .tab[aria-selected="true"]{background:var(--vellum);color:var(--ink);border-color:var(--vellum)}
+  .ledger{display:flex;flex-direction:column}
+  .row{
+    display:grid;grid-template-columns:34px 1fr 128px 92px;gap:16px;align-items:center;
+    padding:15px 4px;border-bottom:1px solid var(--rule);
+  }
+  .row:first-child{border-top:1px solid var(--rule)}
+  .pos{font-family:var(--display);font-weight:800;font-size:15px;color:var(--dim);font-variant-numeric:tabular-nums}
+  .row:nth-child(1) .pos,.row:nth-child(2) .pos,.row:nth-child(3) .pos{color:var(--crimson)}
+  .prompt{
+    font-family:var(--display);font-size:17px;font-weight:600;color:var(--vellum);
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  }
+  .prompt::before{content:'“'}.prompt::after{content:'”'}
+  .math{font-size:11px;color:var(--dim);font-variant-numeric:tabular-nums}
+  .score{text-align:right;font-size:15px;font-weight:700;color:var(--vellum);font-variant-numeric:tabular-nums}
+  .score s{text-decoration:none;font-size:10px;font-weight:400;color:var(--dim)}
+  .who{font-size:11px;color:var(--dim);margin-top:2px}
+  .empty{padding:34px 4px;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);color:var(--dim);font-size:13px}
+
+  /* ---------- stat glossary ---------- */
+  .glossary{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--rule)}
+  .gcell{background:var(--ink);padding:20px 18px}
+  .gcell h3{
+    font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--crimson);margin:0 0 10px;
+  }
+  .gcell p{margin:0;font-size:12.5px;line-height:1.6;color:var(--text)}
+
+  /* ---------- ranks ---------- */
+  .ranks{display:flex;flex-direction:column}
+  .rk{
+    display:grid;grid-template-columns:118px 1fr;gap:20px;align-items:baseline;
+    padding:13px 4px;border-bottom:1px solid var(--rule);
+  }
+  .rk:first-child{border-top:1px solid var(--rule)}
+  .rk b{font-size:11.5px;color:var(--dim);font-variant-numeric:tabular-nums;font-weight:400}
+  .rk em{
+    font-family:var(--display);font-style:normal;font-weight:600;font-size:16px;
+    color:var(--vellum);letter-spacing:.03em;
+  }
+  .rk i{font-style:normal;font-size:12px;color:var(--dim);margin-left:12px}
+  .rk:last-child em{color:var(--crimson)}
+  .rk:first-child em{color:var(--guild)}
+
+  footer{
+    border-top:1px solid var(--rule);padding:30px 0 44px;
+    display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;
+    font-size:11px;color:var(--dim);
+  }
+  footer a{color:var(--text);text-decoration:none;border-bottom:1px solid var(--rule)}
+  footer a:hover{color:var(--vellum)}
+
+  @media (max-width:900px){
+    .hero{grid-template-columns:1fr;gap:44px;padding:52px 0 48px}
+    .glossary{grid-template-columns:1fr 1fr}
+  }
+  @media (max-width:620px){
+    .wrap{padding:0 18px}
+    .row{grid-template-columns:26px 1fr auto;gap:12px;row-gap:4px}
+    .math{grid-column:2/4;font-size:10.5px}
+    .glossary{grid-template-columns:1fr}
+    .rk{grid-template-columns:1fr;gap:2px}
+    .rk i{margin-left:0;display:block}
+    .seal{width:72px;height:72px;right:-8px;bottom:-8px}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="mark">LARP<span>·</span>CHECK</div>
+    <div class="eyebrow">Guild of Applied LARPing<br>Est. MMXXIV</div>
+  </header>
+
+  <div class="hero">
+    <div>
+      <p class="eyebrow">An audit, not a vibe check</p>
+      <h1>Am I <em>larping</em>?</h1>
+      <p class="lede">Your coding agent has the receipts. It knows exactly how many words you typed and how many lines it wrote. <b>Ask it for the ratio.</b></p>
+
+      <div class="install">
+        <div class="cmd">
+          <code id="cmd">npx skills add <b>glasspollution/larpcheck</b> --agent claude-code codex cursor --global --yes</code>
+          <button class="copy" id="copy" aria-label="Copy install command">Copy</button>
+        </div>
+        <p class="then">Then run <code>/larpcheck</code> inside your agent.</p>
+        <div class="agents">
+          <span>Claude Code</span><span>Codex</span><span>Cursor</span><span>+70 agents</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="sheet">
+      <div class="sheet-hd">Character Sheet · Specimen</div>
+      <p class="rank">Full Costume</p>
+      <p class="ratio">1,204<small> : 1</small></p>
+      <p class="basis">812 words typed · 977,648 lines shipped</p>
+
+      <div class="stats">
+        <div class="stat"><b>Vagueness</b><div class="track"><span class="fill" style="width:80%"></span></div><i>16</i></div>
+        <div class="stat"><b>Blind faith</b><div class="track"><span class="fill" style="width:90%"></span></div><i>18</i></div>
+        <div class="stat"><b>Paste</b><div class="track"><span class="fill" style="width:55%"></span></div><i>11</i></div>
+        <div class="stat"><b>Deference</b><div class="track"><span class="fill" style="width:70%"></span></div><i>14</i></div>
+      </div>
+
+      <div class="trophy">
+        <p class="eyebrow">Best performance</p>
+        <q>make it prettier</q>
+        <p>3 words → 13,236 lines · 4,412 : 1</p>
+      </div>
+
+      <div class="seal" aria-hidden="true"><span>CERTIFIED<br>LARP<br>ENGINEER</span></div>
+    </div>
+  </div>
+
+  <section>
+    <div class="sec-hd">
+      <div>
+        <p class="eyebrow">The ledger</p>
+        <h2>Most lines shipped per word typed</h2>
+        <p class="note">One entry per audit. Only the winning prompt is ever posted, and only if you say so.</p>
+      </div>
+      <div class="tabs" role="tablist">
+        <button class="tab" role="tab" aria-selected="false" data-scope="day">Today</button>
+        <button class="tab" role="tab" aria-selected="true" data-scope="all">All time</button>
+      </div>
+    </div>
+    <div class="ledger" id="ledger"></div>
+  </section>
+
+  <section>
+    <p class="eyebrow">The stat block</p>
+    <h2 style="margin-bottom:26px">Four numbers, none of them flattering</h2>
+    <div class="glossary">
+      <div class="gcell">
+        <h3>Vagueness</h3>
+        <p>How little you said to get how much. “make it work properly” is a 20. Pasting a spec is a 3.</p>
+      </div>
+      <div class="gcell">
+        <h3>Blind faith</h3>
+        <p>Diffs you approved without ever opening the file afterwards. The bravest stat on the sheet.</p>
+      </div>
+      <div class="gcell">
+        <h3>Paste</h3>
+        <p>Turns that were a stack trace and nothing else. No greeting, no theory, no words.</p>
+      </div>
+      <div class="gcell">
+        <h3>Deference</h3>
+        <p>Times your agent told you that you were absolutely right. Counts arguments you won but shouldn’t have entered.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <p class="eyebrow">Guild ranks</p>
+    <h2 style="margin-bottom:26px">By lines shipped per word typed</h2>
+    <div class="ranks">
+      <div class="rk"><b>under 50</b><div><em>Civilian</em><i>Appears to type their own code. Under review.</i></div></div>
+      <div class="rk"><b>50 – 199</b><div><em>Weekend LARPer</em><i>Still reads the diffs. On weekdays.</i></div></div>
+      <div class="rk"><b>200 – 799</b><div><em>Method Actor</em><i>Has started saying “we” about the agent.</i></div></div>
+      <div class="rk"><b>800 – 1,999</b><div><em>Full Costume</em><i>Owns a mechanical keyboard. Uses four keys.</i></div></div>
+      <div class="rk"><b>2,000 – 4,999</b><div><em>Thought Leader</em><i>Ships more per word than any writer alive.</i></div></div>
+      <div class="rk"><b>5,000 +</b><div><em>Founder</em><i>Has not written code since 2024.</i></div></div>
+    </div>
+  </section>
+
+  <footer>
+    <div>Runs locally. Reads your agent’s own transcripts. Uploads one prompt, with permission.</div>
+    <div><a href="#">skill source</a> · <a href="#">what gets sent</a></div>
+  </footer>
+
+</div>
+
+<script>
+  // Copy install command
+  var btn = document.getElementById('copy');
+  btn.addEventListener('click', function(){
+    var text = document.getElementById('cmd').innerText;
+    var done = function(){
+      btn.textContent = 'Copied';
+      btn.classList.add('done');
+      setTimeout(function(){ btn.textContent = 'Copy'; btn.classList.remove('done'); }, 1800);
+    };
+    if (navigator.clipboard) { navigator.clipboard.writeText(text).then(done, done); }
+    else {
+      var t = document.createElement('textarea');
+      t.value = text; document.body.appendChild(t); t.select();
+      try { document.execCommand('copy'); } catch(e){}
+      document.body.removeChild(t); done();
+    }
+  });
+
+  // Seed entries so the page is never empty on launch day.
+  var SEED = [
+    { prompt:"make it prettier",        words:3, lines:13236, handle:"anonymous",   agent:"claude-code" },
+    { prompt:"fix",                     words:1, lines:4102,  handle:"@dhh_fan",    agent:"cursor" },
+    { prompt:"you know what I mean",    words:5, lines:16890, handle:"anonymous",   agent:"codex" },
+    { prompt:"same as the other one",   words:5, lines:14220, handle:"@shipfast",   agent:"claude-code" },
+    { prompt:"just make it work",       words:4, lines:9880,  handle:"anonymous",   agent:"claude-code" },
+    { prompt:"do it properly this time",words:5, lines:11400, handle:"@notaphd",    agent:"cursor" },
+    { prompt:"idk you decide",          words:4, lines:7320,  handle:"anonymous",   agent:"codex" }
+  ];
+
+  var fmt = function(n){ return n.toLocaleString('en-US'); };
+
+  function render(rows){
+    var el = document.getElementById('ledger');
+    if (!rows.length){
+      el.innerHTML = '<div class="empty">No audits posted yet. Be the first to incriminate yourself.</div>';
+      return;
+    }
+    rows.forEach(function(r){ r.ratio = r.ratio || Math.round(r.lines / Math.max(r.words,1)); });
+    rows.sort(function(a,b){ return b.ratio - a.ratio; });
+    el.innerHTML = rows.slice(0,10).map(function(r,i){
+      return '<div class="row">'
+        + '<div class="pos">' + (i+1) + '</div>'
+        + '<div><div class="prompt">' + esc(r.prompt) + '</div>'
+        + '<div class="who">' + esc(r.handle || 'anonymous') + ' · ' + esc(r.agent || 'unknown') + '</div></div>'
+        + '<div class="math">' + r.words + ' words<br>' + fmt(r.lines) + ' lines</div>'
+        + '<div class="score">' + fmt(r.ratio) + ' <s>: 1</s></div>'
+        + '</div>';
+    }).join('');
+  }
+
+  function esc(s){
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+
+  var scope = 'all';
+  function load(){
+    render(SEED); // paint immediately
+    fetch('/api/leaderboard?scope=' + scope)
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(d){ if (d && Array.isArray(d.entries) && d.entries.length) render(d.entries); })
+      .catch(function(){ /* seed stays */ });
+  }
+
+  Array.prototype.forEach.call(document.querySelectorAll('.tab'), function(tab){
+    tab.addEventListener('click', function(){
+      Array.prototype.forEach.call(document.querySelectorAll('.tab'), function(t){
+        t.setAttribute('aria-selected', String(t === tab));
+      });
+      scope = tab.dataset.scope;
+      load();
+    });
+  });
+
+  load();
+</script>
+</body>
+</html>

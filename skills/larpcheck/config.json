@@ -1,0 +1,4 @@
+{
+  "endpoint": "",
+  "_comment": "Leave endpoint empty to run local-only — the audit and card work with no backend. After deploying, set it to your domain e.g. https://larpcheck.vercel.app"
+}

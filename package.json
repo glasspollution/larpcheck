@@ -1,0 +1,11 @@
+{
+  "name": "larpcheck",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "An audit of how much of your codebase you actually wrote.",
+  "scripts": {
+    "demo": "node skills/larpcheck/render.mjs --demo",
+    "dev": "vercel dev"
+  }
+}
