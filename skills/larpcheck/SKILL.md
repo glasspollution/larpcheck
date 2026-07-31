@@ -1,6 +1,6 @@
 ---
 name: larpcheck
-description: Audit how much of the code in this project the user actually wrote. Scans this agent's own local session history plus git log, computes the user's LARP Ratio (lines shipped per word typed), renders a character sheet in the terminal, and optionally posts their single most LARP prompt to the public ledger. Use when the user runs /larpcheck, or asks how much they are LARPing, how much of this code they actually wrote, or for their LARP score.
+description: Audit how much of the code in this project the user actually wrote. Scans this agent's own local session history plus git log, computes the user's LARP Ratio (lines shipped per word typed), renders a character sheet in the terminal, and optionally posts their single most LARP prompt to the public ledger. Use when the user runs /larpcheck or $larpcheck, or asks how much they are LARPing, how much of this code they actually wrote, or for their LARP score.
 ---
 
 # larpcheck
@@ -95,8 +95,9 @@ agent, and `npx skills` symlinks by default, so resolve it rather than guessing:
 
 ```bash
 # -L is required: `npx skills` symlinks by default and plain `find` won't follow it
-SKILL_DIR=$(dirname "$(find -L ~/.claude/skills ~/.codex/skills ~/.cursor/skills \
-  ~/.agents/skills ~/.config/agents/skills .claude/skills .agents/skills \
+SKILL_DIR=$(dirname "$(find -L \
+  ~/.claude/skills ~/.codex/skills ~/.cursor/skills ~/.agents/skills \
+  ~/.config/agents/skills .claude/skills .codex/skills .agents/skills skills \
   -name render.mjs -path '*larpcheck*' 2>/dev/null | head -1)")
 
 # guard: dirname of an empty string is "." — treat that as not found

@@ -39,9 +39,28 @@ npm run demo
 # 2. install into your agents
 npx skills add glasspollution/larpcheck --agent claude-code codex cursor --global --yes
 
-# 3. open Claude Code or Codex in a repo you've used the agent on, then:
-/larpcheck
+# 3. open the agent in a repo you've actually used it on, then invoke it:
+#    Claude Code -> /larpcheck
+#    Codex       -> $larpcheck        (NOT /larpcheck - see below)
+#    Cursor      -> just ask: "how much am I larping"
 ```
+
+### Invocation differs per agent
+
+Only Claude Code turns a skill's `name` into a slash command. Codex does not:
+`/skills` opens a picker, and `$larpcheck` invokes it directly. In any agent you
+can also just ask -- "how much of this code did I actually write" -- and the
+`description` frontmatter triggers it.
+
+If it doesn't show up in Codex, check where the files actually landed:
+
+```bash
+ls -la ~/.codex/skills/ ~/.agents/skills/ .agents/skills/ .codex/skills/ 2>/dev/null
+```
+
+Codex's skills directory has moved between versions. Whichever of those holds
+`larpcheck/SKILL.md` is the live one; the skill's own `find -L` covers all of
+them. Confirm Codex sees it at all with `/skills`.
 
 If the skill can't find `render.mjs`, it curls it from this repo's `main` branch
 — so **push before you test**, or the fallback 404s.
