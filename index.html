@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=JetBrains+Mono:wght@400;500;700;800&display=swap"
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700;800&display=swap"
     rel="stylesheet">
   <style>
     :root {
@@ -34,7 +34,7 @@
       --t5: #D2691E;
       --t6: #C41E3A;
       --mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
-      --display: "Cinzel", Georgia, serif;
+      --display: "DM Sans", Arial, sans-serif;
     }
 
     * {
@@ -47,7 +47,13 @@
 
     body {
       margin: 0;
-      background: var(--paper);
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 12% 4%, rgba(196, 30, 58, .11), transparent 28rem),
+        linear-gradient(rgba(23, 27, 38, .035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(23, 27, 38, .035) 1px, transparent 1px),
+        var(--paper);
+      background-size: auto, 40px 40px, 40px 40px, auto;
       color: var(--ink-2);
       font-family: var(--mono);
       font-size: 14px;
@@ -73,28 +79,41 @@
 
     /* masthead */
     .masthead {
+      position: relative;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 20px;
-      padding: 22px 0
+      padding: 24px 0
+    }
+
+    .masthead::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      width: 100vw;
+      height: 1px;
+      background: rgba(23, 27, 38, .12);
+      transform: translateX(-50%)
     }
 
     .brand {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 11px;
       font-weight: 800;
       color: var(--ink);
       letter-spacing: -.01em
     }
 
     .brand i {
-      width: 15px;
-      height: 15px;
+      width: 10px;
+      height: 10px;
       background: var(--crimson);
-      border-radius: 3px;
-      display: block
+      border-radius: 50%;
+      display: block;
+      box-shadow: 0 0 0 5px rgba(196, 30, 58, .12)
     }
 
     .masthead p {
@@ -112,29 +131,70 @@
     /* hero */
     .hero {
       display: grid;
-      grid-template-columns: 1fr 1.12fr;
-      gap: 64px;
-      align-items: start;
-      padding: 52px 0 72px
+      grid-template-columns: minmax(0, .86fr) minmax(560px, 1.14fr);
+      gap: clamp(44px, 6vw, 84px);
+      align-items: center;
+      min-height: calc(100vh - 93px);
+      padding: 68px 0 78px
     }
 
     h1 {
-      font-family: var(--mono);
-      font-weight: 800;
+      font-family: var(--display);
+      font-weight: 700;
       color: var(--ink);
-      font-size: clamp(46px, 6.6vw, 88px);
-      line-height: .92;
-      letter-spacing: -.045em;
+      font-size: clamp(58px, 7.1vw, 104px);
+      line-height: .84;
+      letter-spacing: -.075em;
       margin: 0;
     }
 
-    .tagline {
-      font-size: 19px;
-      line-height: 1.45;
-      color: var(--ink-2);
-      margin: 22px 0 0;
-      max-width: 22ch
+    h1 span {
+      display: block;
+      color: var(--crimson);
+      font-style: italic;
+      font-weight: 600;
+      transform: translateX(8px)
     }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 25px;
+      border: 1px solid rgba(23, 27, 38, .18);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .58);
+      padding: 7px 11px;
+      color: var(--ink);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .13em;
+      text-transform: uppercase
+    }
+
+    .kicker::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--crimson);
+      animation: pulse 1.8s infinite
+    }
+
+    @keyframes pulse {
+      50% { box-shadow: 0 0 0 5px rgba(196, 30, 58, .12) }
+    }
+
+    .tagline {
+      font-family: var(--display);
+      font-size: 20px;
+      line-height: 1.42;
+      color: var(--ink-2);
+      margin: 30px 0 0;
+      max-width: 31ch
+    }
+
+    .tagline strong { color: var(--ink) }
 
     .btn {
       display: inline-flex;
@@ -144,11 +204,11 @@
       background: var(--ink);
       color: #F7F5EF;
       border: 0;
-      border-radius: 5px;
+      border-radius: 999px;
       font-family: var(--mono);
       font-size: 14px;
       font-weight: 500;
-      padding: 13px 20px;
+      padding: 14px 21px;
       cursor: pointer;
       transition: transform .12s, background .15s;
     }
@@ -172,15 +232,15 @@
       display: flex;
       flex-wrap: wrap;
       gap: 7px;
-      margin-top: 26px
+      margin-top: 18px
     }
 
     .tiles span {
       width: 38px;
       height: 38px;
-      border-radius: 7px;
-      background: var(--card);
-      border: 1px solid var(--rule);
+      border-radius: 50%;
+      background: rgba(255,255,255,.62);
+      border: 1px solid rgba(23,27,38,.14);
       display: grid;
       place-items: center;
       font-size: 11px;
@@ -200,7 +260,13 @@
       height: 24px;
       object-fit: contain;
       display: block;
-      border-radius: 4px;
+      border-radius: 50%;
+    }
+
+    .tile-logo-openai {
+      border-radius: 0;
+      padding: 0;
+      object-fit: contain
     }
 
     /* terminal window */
@@ -640,6 +706,8 @@
         max-width: 34ch
       }
 
+      .hero-copy { max-width: 680px }
+
       .glossary {
         grid-template-columns: 1fr 1fr
       }
@@ -653,6 +721,10 @@
       .masthead p {
         display: none
       }
+
+      .hero { min-height: auto; padding-top: 44px }
+
+      h1 { font-size: clamp(54px, 20vw, 78px) }
 
       .panel-grid {
         grid-template-columns: 1fr;
@@ -694,28 +766,25 @@
 
     <header class="masthead">
       <div class="brand"><i></i> larpcheck</div>
-      <p>an audit of how much of your code you actually wrote &nbsp;·&nbsp; <b>guild of applied larping</b></p>
+      <p><b>guild of applied larping</b></p>
     </header>
 
     <div class="hero">
-      <div>
-        <h1>larpcheck</h1>
-        <p class="tagline">Find out how much of your code you actually wrote.</p>
+      <div class="hero-copy">
+        <p class="kicker">from la to la larp, larp, larp</p>
+        <h1>larp larp<span>larp sahur.</span></h1>
+        <p class="tagline"><strong>promptmaxxing. commitmogging.</strong> one “continue” away from principal engineer.</p>
         <button class="btn" id="copyBtn">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
             stroke-linejoin="round">
             <rect x="9" y="9" width="13" height="13" rx="2" />
             <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
           </svg>
-          Copy skill install
+          check my larp
         </button>
         <div class="tiles" aria-label="supported agents">
           <span title="Claude Code"><img src="https://cdn.simpleicons.org/anthropic/D4793B" alt="Claude Code" class="tile-logo"></span>
-          <span title="Codex">
-            <svg class="tile-logo" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-label="Codex (OpenAI)">
-              <path d="M22.282 9.821a5.985 5.985 0 00-.516-4.91 6.046 6.046 0 00-6.51-2.9A6.065 6.065 0 0011.01.833a5.984 5.984 0 00-5.716 4.14 6.02 6.02 0 00-4.013 2.916 6.046 6.046 0 00.753 7.079 5.98 5.98 0 00.51 4.911 6.051 6.051 0 006.515 2.9A5.985 5.985 0 0013.26 23.1a6.04 6.04 0 005.718-4.146 6.02 6.02 0 004.01-2.92 6.041 6.041 0 00-.706-7.213zm-9.022 12.61a4.475 4.475 0 01-2.869-1.04l.141-.081 4.755-2.745a.783.783 0 00.395-.681v-6.706l2.01 1.16a.071.071 0 01.038.052v5.554a4.503 4.503 0 01-4.47 4.487zm-9.63-4.12a4.47 4.47 0 01-.536-3.014l.142.085 4.754 2.745a.77.77 0 00.785 0l5.808-3.354v2.317a.07.07 0 01-.028.061L9.019 19.85a4.5 4.5 0 01-5.39-.539zm-1.252-10.39a4.47 4.47 0 012.321-1.966V11.2a.77.77 0 00.39.68l5.8 3.349-2.01 1.159a.073.073 0 01-.068 0L5.55 13.046a4.5 4.5 0 01-.672-5.125zm16.52 3.864l-5.807-3.354 2.01-1.158a.071.071 0 01.068 0l4.378 2.528a4.5 4.5 0 01-.676 8.117V12.4a.77.77 0 00-.392-.681zm2.001-3.025l-.142-.085-4.754-2.745a.777.777 0 00-.785 0L9.41 9.25V6.933a.07.07 0 01.028-.061l4.378-2.526a4.5 4.5 0 016.62 4.668zm-12.61 4.135l-2.01-1.158a.07.07 0 01-.038-.053v-5.554a4.5 4.5 0 017.375-3.453l-.142.08-4.754 2.745a.783.783 0 00-.395.681zm1.092-2.354l2.587-1.493 2.587 1.493v2.985l-2.587 1.493-2.587-1.493z"/>
-            </svg>
-          </span>
+          <span title="Codex"><img src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg" alt="Codex (OpenAI)" class="tile-logo tile-logo-openai"></span>
           <span title="Cursor"><img src="https://cdn.simpleicons.org/cursor/000000" alt="Cursor" class="tile-logo"></span>
         </div>
       </div>
@@ -773,7 +842,7 @@
     </div>
 
     <footer>
-      <div>Runs locally. Reads your agent’s own transcripts. Uploads one prompt, with permission.</div>
+      <div>Runs locally. Uploads one prompt, with permission.</div>
       <div><a href="https://github.com/glasspollution/larpcheck">source</a></div>
     </footer>
   </div>
@@ -825,8 +894,8 @@
     big.addEventListener('click', function () {
       copy(cmdText(), big);
       var l = big.childNodes[big.childNodes.length - 1];
-      l.nodeValue = ' Copied';
-      setTimeout(function () { l.nodeValue = ' Copy skill install'; }, 1700);
+      l.nodeValue = ' copied';
+      setTimeout(function () { l.nodeValue = ' check my larp'; }, 1700);
     });
     document.getElementById('iconCopy').addEventListener('click', function () {
       copy(cmdText(), this);
