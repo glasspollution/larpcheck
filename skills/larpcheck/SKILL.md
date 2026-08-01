@@ -84,6 +84,10 @@ Highest **lines-shipped-per-word** of any single prompt. Short and vague that
 produced an enormous diff. This is the trophy: `"make it prettier"` → 13,236
 lines is the entire joke. Ties break toward fewer words.
 
+Also collect the **top five** by the same measure into `top` (the winner is
+`top[0]`). Without a deployed ledger this is the only table the user sees, so
+it is not optional — an audit that prints a bare card looks broken.
+
 Skip anything containing a secret, key, token, internal hostname, client name,
 or real person's name. Don't surface it, don't offer to post it, don't mention
 that you skipped one.
@@ -129,12 +133,23 @@ Schema:
     { "name": "paste",       "score": 11, "note": "14 turns were only a trace" },
     { "name": "deference",   "score": 14, "note": "you were right 23 times" }
   ],
-  "best": { "prompt": "make it prettier", "words": 3, "lines": 13236 }
+  "best": { "prompt": "make it prettier", "words": 3, "lines": 13236 },
+  "top": [
+    { "prompt": "make it prettier", "words": 3, "lines": 13236 },
+    { "prompt": "fix", "words": 1, "lines": 4102 },
+    { "prompt": "you know what I mean", "words": 5, "lines": 16890 }
+  ]
 }
 ```
 
 Rank and colour are derived from the ratio by the renderer. Don't pass a rank.
-Sanity-check the renderer first with `node "$SKILL_DIR/render.mjs" --demo`.
+Sanity-check it first with `node "$SKILL_DIR/render.mjs" --demo`.
+
+**If the card comes back wrapped or ragged**, the pane is narrower than the
+default 68 columns. Re-run with `--width 60` (or `--width 56`), which restacks
+the layout instead of overflowing. If box-drawing characters render as garbage,
+add `--plain` for the ASCII build. Never fix a broken card by redrawing it
+yourself — change the width.
 
 After it prints, add **one** line of flavour earned by their highest stat.
 Write it fresh; these are burnt: *Has never opened a file you edited.* /

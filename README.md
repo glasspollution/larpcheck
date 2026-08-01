@@ -5,19 +5,25 @@ into Claude Code / Codex / Cursor, reads that agent's own local transcripts, and
 computes your **LARP Ratio** — lines shipped per word typed.
 
 ```
-╭─ larpcheck v0.1  ·  claude-code ─────────────────────────────────────╮
-│  LARP RATIO                │ Read 12 sessions scoped to this repo.   │
-│  ╭────────╮                │ Only your winning prompt ever leaves    │
-│  │ 51 : 1 │                │ this machine, and only if you say so.   │
-│  ╰────────╯                │                                         │
-│  WEEKEND LARPER            │                                         │
-├──────────────────────────────────────────────────────────────────────┤
-│  VAGUENESS    ██████████░░░░░░  13  you said "just" 22 times         │
-│  BLIND FAITH  ██████████████░░  17  2 of 31 edits ever opened        │
-├──────────────────────────────────────────────────────────────────────┤
-│  BEST PERFORMANCE                                         3,133 : 1  │
-│  "fix the thing"                                                     │
-╰──────────────────────────────────────────────────────────────────────╯
+╭─ larpcheck v0.1  ·  claude-code ─────────────────────────────────╮
+│  LARP RATIO              │ Read 47 sessions. Counted every word  │
+│  ╭───────────╮           │ you typed and every line I shipped.   │
+│  │ 1,204 : 1 │           │ Only your winning prompt ever leaves  │
+│  ╰───────────╯           │ this machine, and only if you say so. │
+│  FULL COSTUME            │                                       │
+├──────────────────────────────────────────────────────────────────┤
+│  VAGUENESS    ━━━━━━━━━━━━━───  16  you said "just" 41 times     │
+│  BLIND FAITH  ━━━━━━━━━━━━━━──  18  0 files opened after an edit │
+├──────────────────────────────────────────────────────────────────┤
+│  BEST PERFORMANCE                                     4,412 : 1  │
+│  "make it prettier"                                              │
+╰──────────────────────────────────────────────────────────────────╯
+  owns a mechanical keyboard, uses four keys
+
+  YOUR TOP PERFORMANCES   this machine only
+  RANK RATIO       TIER             PROMPT
+▸ #1   4,412 : 1   thought leader   "make it prettier"  ← you
+  #2   4,102 : 1   thought leader   "fix"
 ```
 
 ## Why it travels
@@ -65,6 +71,18 @@ them. Confirm Codex sees it at all with `/skills`.
 If the skill can't find `render.mjs`, it curls it from this repo's `main` branch
 — so **push before you test**, or the fallback 404s.
 
+### If the card looks wrong in your agent
+
+```bash
+node <skill-dir>/render.mjs --demo --width 60   # narrower, restacks the layout
+node <skill-dir>/render.mjs --demo --plain      # ASCII, for terminals that
+                                                # mangle box-drawing glyphs
+```
+
+Default width is 68, not 72: agent tool-output panes are narrower than a bare
+terminal, and one wrapped line destroys the card. Verified aligned at every
+width from 52 to 100 in both charsets.
+
 ## Deploy the ledger (optional, later)
 
 ```bash
@@ -97,6 +115,13 @@ push. Until you do, nothing is ever uploaded.
   to follow it, and `import.meta.url === 'file://' + argv[1]` is false under a
   symlink because Node resolves one side and not the other — that check has to
   `realpathSync` both. Both bugs were silent: the second printed nothing at all.
+- **The table renders with no backend.** The renderer shows the public ledger
+  when the payload has `ledger`, and otherwise falls back to the user's own
+  `top` prompts. An audit that prints a bare card looks broken, and local-only
+  is the default state, so `top` is required in the payload — not optional.
+- **Bars are `━`/`─`, not `█`/`░`.** The shade glyphs dither on Windows and the
+  filled and empty halves blend into one solid block. Borders are also not
+  `dim`; at dim they vanish against most terminal themes.
 - **Colour is not gated behind `isTTY`.** When an agent runs the script its
   stdout is a pipe, so a TTY check would strip colour exactly when you want it.
   `NO_COLOR=1` still works and the card reads fine in monochrome.

@@ -4,32 +4,37 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>larpcheck — am I larping?</title>
+  <title>larpcheck — how much of your code did you actually write?</title>
   <meta name="description"
     content="Your coding agent knows how many words you typed and how many lines it wrote. Ask it for the ratio.">
-  <meta property="og:title" content="am I larping?">
-  <meta property="og:description"
-    content="Your coding agent knows how many words you typed and how many lines it wrote. Ask it for the ratio.">
+  <meta property="og:title" content="larpcheck">
+  <meta property="og:description" content="Find out how much of your code you actually wrote.">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=JetBrains+Mono:wght@400;500;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=JetBrains+Mono:wght@400;500;700;800&display=swap"
     rel="stylesheet">
   <style>
     :root {
-      --ink: #0F1420;
-      --ink-2: #161C2B;
-      --rule: #2A3242;
-      --vellum: #E8E2D0;
-      --vellum-2: #D8D0BA;
+      --paper: #F1EEE6;
+      --card: #FFFFFF;
+      --chrome: #E9E4D8;
+      --ink: #171B26;
+      --ink-2: #3D4453;
+      --dim: #7B8496;
+      --rule: #DFD9CC;
+      --rule-2: #EDE9DF;
       --crimson: #C41E3A;
-      --guild: #4A9B7F;
-      --text: #C3C9D6;
-      --dim: #6B7688;
+      --t1: #2F7D5E;
+      --t2: #1F7A8C;
+      --t3: #6B4EA8;
+      --t4: #B5811A;
+      --t5: #D2691E;
+      --t6: #C41E3A;
+      --mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
       --display: "Cinzel", Georgia, serif;
-      --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
     }
 
     * {
@@ -42,33 +47,18 @@
 
     body {
       margin: 0;
-      background: var(--ink);
-      color: var(--text);
+      background: var(--paper);
+      color: var(--ink-2);
       font-family: var(--mono);
       font-size: 14px;
-      line-height: 1.65;
+      line-height: 1.6;
       -webkit-font-smoothing: antialiased;
     }
 
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-      background: radial-gradient(ellipse 90% 55% at 50% -10%, rgba(196, 30, 58, .13), transparent 70%);
-    }
-
     .wrap {
-      position: relative;
-      z-index: 1;
-      max-width: 1080px;
+      max-width: 1240px;
       margin: 0 auto;
-      padding: 0 24px
-    }
-
-    a {
-      color: inherit
+      padding: 0 28px
     }
 
     ::selection {
@@ -81,96 +71,306 @@
       outline-offset: 3px
     }
 
-    .eyebrow {
-      font-size: 10px;
-      letter-spacing: .24em;
-      text-transform: uppercase;
-      color: var(--dim);
-      font-weight: 500;
-    }
-
-    /* ---------- masthead ---------- */
+    /* masthead */
     .masthead {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 16px;
-      padding: 20px 0;
-      border-bottom: 1px solid var(--rule);
+      gap: 20px;
+      padding: 22px 0
     }
 
-    .mark {
-      font-family: var(--display);
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
       font-weight: 800;
-      letter-spacing: .12em;
-      font-size: 13px;
-      color: var(--vellum)
+      color: var(--ink);
+      letter-spacing: -.01em
     }
 
-    .mark span {
-      color: var(--crimson)
+    .brand i {
+      width: 15px;
+      height: 15px;
+      background: var(--crimson);
+      border-radius: 3px;
+      display: block
     }
 
-    .masthead .eyebrow {
+    .masthead p {
+      margin: 0;
+      font-size: 12.5px;
+      color: var(--dim);
       text-align: right
     }
 
-    /* ---------- hero ---------- */
-    .hero {
-      display: grid;
-      grid-template-columns: 1.05fr .95fr;
-      gap: 56px;
-      align-items: center;
-      padding: 76px 0 64px;
-    }
-
-    h1 {
-      font-family: var(--display);
-      font-weight: 800;
-      color: var(--vellum);
-      font-size: clamp(44px, 7.2vw, 82px);
-      line-height: .94;
-      letter-spacing: -.01em;
-      margin: 14px 0 0;
-    }
-
-    h1 em {
-      font-style: normal;
-      color: var(--crimson)
-    }
-
-    .lede {
-      font-size: 15px;
-      line-height: 1.7;
-      color: var(--text);
-      margin: 22px 0 0;
-      max-width: 44ch
-    }
-
-    .lede b {
-      color: var(--vellum);
+    .masthead b {
+      color: var(--ink);
       font-weight: 500
     }
 
-    .install {
-      margin-top: 30px
+    /* hero */
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr 1.12fr;
+      gap: 64px;
+      align-items: start;
+      padding: 52px 0 72px
     }
 
+    h1 {
+      font-family: var(--mono);
+      font-weight: 800;
+      color: var(--ink);
+      font-size: clamp(46px, 6.6vw, 88px);
+      line-height: .92;
+      letter-spacing: -.045em;
+      margin: 0;
+    }
+
+    .tagline {
+      font-size: 19px;
+      line-height: 1.45;
+      color: var(--ink-2);
+      margin: 22px 0 0;
+      max-width: 22ch
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      margin-top: 30px;
+      background: var(--ink);
+      color: #F7F5EF;
+      border: 0;
+      border-radius: 5px;
+      font-family: var(--mono);
+      font-size: 14px;
+      font-weight: 500;
+      padding: 13px 20px;
+      cursor: pointer;
+      transition: transform .12s, background .15s;
+    }
+
+    .btn:hover {
+      background: #000;
+      transform: translateY(-1px)
+    }
+
+    .btn.done {
+      background: var(--t1)
+    }
+
+    .btn svg {
+      width: 15px;
+      height: 15px;
+      flex: 0 0 auto
+    }
+
+    .tiles {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 26px
+    }
+
+    .tiles span {
+      width: 38px;
+      height: 38px;
+      border-radius: 7px;
+      background: var(--card);
+      border: 1px solid var(--rule);
+      display: grid;
+      place-items: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--dim);
+      letter-spacing: -.02em;
+    }
+
+    .tiles span:last-child {
+      width: auto;
+      padding: 0 11px;
+      font-weight: 400
+    }
+
+    .tile-logo {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+      display: block;
+      border-radius: 4px;
+    }
+
+    /* terminal window */
+    .win {
+      background: var(--card);
+      border: 1px solid var(--rule);
+      border-radius: 11px;
+      box-shadow: 0 22px 50px -26px rgba(23, 27, 38, .28);
+      overflow: hidden;
+    }
+
+    .win-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 15px;
+      background: var(--chrome);
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .dots {
+      display: flex;
+      gap: 7px
+    }
+
+    .dots i {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      display: block
+    }
+
+    .dots i:nth-child(1) {
+      background: #E4645C
+    }
+
+    .dots i:nth-child(2) {
+      background: #E0B140
+    }
+
+    .dots i:nth-child(3) {
+      background: #5FB07A
+    }
+
+    .tabs {
+      display: flex;
+      gap: 4px
+    }
+
+    .tab {
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 5px;
+      font-family: var(--mono);
+      font-size: 10.5px;
+      letter-spacing: .13em;
+      color: var(--dim);
+      padding: 5px 11px;
+      cursor: pointer;
+      transition: .15s;
+    }
+
+    .tab:hover {
+      color: var(--ink)
+    }
+
+    .tab[aria-selected="true"] {
+      background: var(--card);
+      border-color: var(--rule);
+      color: var(--ink);
+      font-weight: 700
+    }
+
+    .win-body {
+      padding: 24px 22px
+    }
+
+    /* score panel */
+    .panel {
+      position: relative;
+      border: 1px solid var(--rule);
+      border-radius: 8px;
+      padding: 26px 20px 22px;
+      margin-top: 8px
+    }
+
+    .panel-tag {
+      position: absolute;
+      top: -9px;
+      left: 16px;
+      background: var(--card);
+      padding: 0 8px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--crimson);
+    }
+
+    .panel-grid {
+      display: grid;
+      grid-template-columns: 1fr 1px 1fr;
+      gap: 22px;
+      align-items: center
+    }
+
+    .divider {
+      background: var(--rule);
+      width: 1px;
+      height: 100%;
+      min-height: 96px
+    }
+
+    .score {
+      text-align: center
+    }
+
+    .score .lbl {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--ink);
+      margin: 0 0 12px
+    }
+
+    .badge {
+      display: inline-block;
+      border-radius: 5px;
+      padding: 9px 17px;
+      font-size: 23px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -.02em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .score .tier {
+      font-size: 12px;
+      margin: 10px 0 0;
+      font-weight: 500
+    }
+
+    .score .meta {
+      font-size: 12px;
+      color: var(--dim);
+      margin: 3px 0 0
+    }
+
+    .blurb {
+      font-size: 13.5px;
+      line-height: 1.65;
+      color: var(--ink-2);
+      margin: 0
+    }
+
+    /* command */
     .cmd {
       display: flex;
       align-items: stretch;
-      background: var(--ink-2);
+      margin-top: 20px;
+      background: #F4F1EA;
       border: 1px solid var(--rule);
-      border-radius: 2px;
+      border-radius: 7px;
       overflow: hidden;
     }
 
     .cmd code {
       flex: 1;
       min-width: 0;
-      padding: 13px 14px;
+      padding: 12px 13px;
       font-size: 12px;
-      color: var(--vellum);
+      color: var(--ink);
       overflow-x: auto;
       white-space: nowrap;
       scrollbar-width: none;
@@ -182,462 +382,262 @@
 
     .cmd code b {
       color: var(--crimson);
-      font-weight: 400
+      font-weight: 500
     }
 
-    .copy {
+    .cmd code i {
+      color: var(--dim);
+      font-style: normal;
+      padding-right: 7px
+    }
+
+    .icopy {
       flex: 0 0 auto;
       border: 0;
       border-left: 1px solid var(--rule);
       background: transparent;
       color: var(--dim);
-      font-family: var(--mono);
-      font-size: 11px;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      padding: 0 16px;
+      padding: 0 13px;
       cursor: pointer;
-      transition: color .15s, background .15s;
+      display: grid;
+      place-items: center;
+      transition: .15s;
     }
 
-    .copy:hover {
-      color: var(--vellum);
-      background: #1D2432
+    .icopy:hover {
+      color: var(--ink);
+      background: #EDEAE1
     }
 
-    .copy.done {
-      color: var(--guild)
+    .icopy.done {
+      color: var(--t1)
+    }
+
+    .icopy svg {
+      width: 15px;
+      height: 15px
     }
 
     .then {
-      margin-top: 12px;
-      font-size: 12px;
+      margin: 12px 0 0;
+      font-size: 12.5px;
       color: var(--dim)
     }
 
     .then code {
-      color: var(--vellum)
+      color: var(--ink);
+      font-weight: 500
     }
 
-    .agents {
-      margin-top: 20px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px
-    }
-
-    .agents span {
-      font-size: 10px;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      color: var(--dim);
-      border: 1px solid var(--rule);
-      border-radius: 99px;
-      padding: 3px 10px;
-    }
-
-    /* ---------- character sheet (signature) ---------- */
-    .sheet {
-      position: relative;
-      background: var(--vellum);
-      color: #1A1F2E;
-      padding: 26px 26px 22px;
-      border-radius: 2px;
-      box-shadow: 0 1px 0 #F5F1E4 inset, 0 26px 60px -18px rgba(0, 0, 0, .75);
-    }
-
-    .sheet::after {
-      content: "";
-      position: absolute;
-      inset: 7px;
-      border: 1px solid rgba(26, 31, 46, .16);
-      pointer-events: none;
-    }
-
-    .sheet-hd {
-      font-family: var(--display);
-      font-size: 9.5px;
-      font-weight: 600;
-      letter-spacing: .2em;
-      text-transform: uppercase;
-      color: #5A5344;
-      border-bottom: 1.5px solid #1A1F2E;
-      padding-bottom: 9px;
-    }
-
-    .rank {
-      font-family: var(--display);
-      font-weight: 800;
-      font-size: clamp(24px, 3.4vw, 32px);
-      letter-spacing: .02em;
-      color: var(--crimson);
-      margin: 16px 0 0;
-      line-height: 1;
-    }
-
-    .ratio {
-      font-family: var(--display);
-      font-weight: 800;
-      font-size: clamp(46px, 7vw, 62px);
-      line-height: .9;
-      letter-spacing: -.02em;
-      margin: 6px 0 0;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .ratio small {
-      font-size: .34em;
-      font-weight: 600;
-      letter-spacing: .08em;
-      color: #5A5344
-    }
-
-    .basis {
-      font-size: 11px;
-      color: #5A5344;
-      margin-top: 8px
-    }
-
-    .stats {
-      margin: 20px 0 0;
-      border-top: 1px solid rgba(26, 31, 46, .2);
-      padding-top: 16px
-    }
-
-    .stat {
-      display: grid;
-      grid-template-columns: 1fr 78px 22px;
-      gap: 10px;
-      align-items: center;
-      margin-bottom: 8px
-    }
-
-    .stat b {
-      font-size: 10px;
-      letter-spacing: .14em;
-      text-transform: uppercase;
-      font-weight: 700;
-      color: #3A4152
-    }
-
-    .track {
-      height: 7px;
-      background: rgba(26, 31, 46, .13);
-      border-radius: 1px;
-      overflow: hidden
-    }
-
-    .fill {
-      height: 100%;
-      background: #1A1F2E;
-      display: block
-    }
-
-    .stat i {
-      font-style: normal;
-      font-size: 12px;
-      font-weight: 700;
-      text-align: right;
-      font-variant-numeric: tabular-nums
-    }
-
-    .trophy {
-      margin-top: 18px;
-      border-top: 1px solid rgba(26, 31, 46, .2);
-      padding-top: 14px
-    }
-
-    .trophy .eyebrow {
-      color: #5A5344
-    }
-
-    .trophy q {
-      display: block;
-      font-family: var(--display);
-      font-size: 19px;
-      font-weight: 600;
-      color: #1A1F2E;
-      margin: 7px 0 6px;
-      quotes: '"' '"';
-    }
-
-    .trophy p {
-      margin: 0;
-      font-size: 11px;
-      color: #5A5344
-    }
-
-    .seal {
-      position: absolute;
-      right: -14px;
-      bottom: -14px;
-      width: 88px;
-      height: 88px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 34% 30%, #E0455E, var(--crimson) 42%, #8E1229);
-      box-shadow: 0 8px 20px -4px rgba(0, 0, 0, .6);
-      display: grid;
-      place-items: center;
-      text-align: center;
-      transform: rotate(-9deg);
-    }
-
-    .seal span {
-      font-family: var(--display);
-      font-weight: 800;
-      font-size: 8px;
-      letter-spacing: .14em;
-      color: #F6E6E9;
-      line-height: 1.35;
-    }
-
-    /* ---------- sections ---------- */
-    section {
-      border-top: 1px solid var(--rule);
-      padding: 56px 0
-    }
-
-    .sec-hd {
+    /* ledger */
+    .ledger-hd {
       display: flex;
       align-items: baseline;
       justify-content: space-between;
-      gap: 20px;
-      flex-wrap: wrap;
-      margin-bottom: 26px
+      margin: 28px 0 0
     }
 
-    h2 {
-      font-family: var(--display);
-      font-weight: 600;
-      color: var(--vellum);
-      font-size: 22px;
-      letter-spacing: .04em;
-      margin: 6px 0 0;
+    .ledger-hd b {
+      font-size: 13.5px;
+      color: var(--ink)
     }
 
-    .note {
+    .ledger-hd span {
       font-size: 12px;
+      color: var(--dim)
+    }
+
+    .cols {
+      display: grid;
+      grid-template-columns: 38px 96px 1fr;
+      gap: 14px;
+      padding: 14px 2px 8px;
+      font-size: 10.5px;
+      letter-spacing: .13em;
       color: var(--dim);
-      max-width: 52ch;
-      margin: 8px 0 0
-    }
-
-    /* ---------- ledger ---------- */
-    .tabs {
-      display: flex;
-      gap: 2px
-    }
-
-    .tab {
-      background: transparent;
-      border: 1px solid var(--rule);
-      color: var(--dim);
-      font-family: var(--mono);
-      font-size: 10px;
-      letter-spacing: .14em;
-      text-transform: uppercase;
-      padding: 6px 13px;
-      cursor: pointer;
-      transition: .15s;
-    }
-
-    .tab[aria-selected="true"] {
-      background: var(--vellum);
-      color: var(--ink);
-      border-color: var(--vellum)
-    }
-
-    .ledger {
-      display: flex;
-      flex-direction: column
     }
 
     .row {
       display: grid;
-      grid-template-columns: 34px 1fr 128px 92px;
-      gap: 16px;
-      align-items: center;
-      padding: 15px 4px;
-      border-bottom: 1px solid var(--rule);
+      grid-template-columns: 38px 96px 1fr;
+      gap: 14px;
+      align-items: start;
+      padding: 13px 2px;
+      border-top: 1px solid var(--rule-2);
     }
 
-    .row:first-child {
-      border-top: 1px solid var(--rule)
-    }
-
-    .pos {
-      font-family: var(--display);
-      font-weight: 800;
-      font-size: 15px;
+    .row .pos {
+      font-size: 13px;
       color: var(--dim);
-      font-variant-numeric: tabular-nums
+      font-variant-numeric: tabular-nums;
+      padding-top: 5px
     }
 
-    .row:nth-child(1) .pos,
-    .row:nth-child(2) .pos,
-    .row:nth-child(3) .pos {
-      color: var(--crimson)
+    .row .sbox {
+      text-align: center
     }
 
-    .prompt {
-      font-family: var(--display);
-      font-size: 17px;
-      font-weight: 600;
-      color: var(--vellum);
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .prompt::before {
-      content: '“'
-    }
-
-    .prompt::after {
-      content: '”'
-    }
-
-    .math {
-      font-size: 11px;
-      color: var(--dim);
-      font-variant-numeric: tabular-nums
-    }
-
-    .score {
-      text-align: right;
-      font-size: 15px;
+    .row .sbox b {
+      display: block;
+      border-radius: 4px;
+      padding: 4px 0;
+      color: #fff;
+      font-size: 13.5px;
       font-weight: 700;
-      color: var(--vellum);
-      font-variant-numeric: tabular-nums
+      font-variant-numeric: tabular-nums;
     }
 
-    .score s {
+    .row .sbox s {
+      display: block;
       text-decoration: none;
-      font-size: 10px;
-      font-weight: 400;
+      font-size: 9.5px;
+      line-height: 1.25;
+      margin-top: 4px;
+      font-weight: 500;
+    }
+
+    .row .txt {
+      padding-top: 4px
+    }
+
+    .row .txt p {
+      margin: 0;
+      font-size: 13.5px;
+      color: var(--ink);
+      word-break: break-word
+    }
+
+    .row .txt span {
+      font-size: 11.5px;
       color: var(--dim)
     }
 
-    .who {
-      font-size: 11px;
-      color: var(--dim);
-      margin-top: 2px
-    }
-
     .empty {
-      padding: 34px 4px;
-      border-top: 1px solid var(--rule);
-      border-bottom: 1px solid var(--rule);
+      padding: 26px 2px;
+      border-top: 1px solid var(--rule-2);
       color: var(--dim);
       font-size: 13px
     }
 
-    /* ---------- stat glossary ---------- */
+    /* sections */
+    section {
+      border-top: 1px solid var(--rule);
+      padding: 60px 0
+    }
+
+    .eyebrow {
+      font-size: 10.5px;
+      letter-spacing: .2em;
+      color: var(--dim);
+      margin: 0
+    }
+
+    h2 {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -.02em;
+      margin: 9px 0 28px
+    }
+
     .glossary {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 1px;
-      background: var(--rule)
+      gap: 14px
     }
 
     .gcell {
-      background: var(--ink);
+      background: var(--card);
+      border: 1px solid var(--rule);
+      border-radius: 9px;
       padding: 20px 18px
     }
 
     .gcell h3 {
-      font-family: var(--mono);
-      font-size: 10.5px;
+      font-size: 11px;
       font-weight: 700;
-      letter-spacing: .16em;
-      text-transform: uppercase;
+      letter-spacing: .14em;
       color: var(--crimson);
-      margin: 0 0 10px;
+      margin: 0 0 10px
     }
 
     .gcell p {
       margin: 0;
-      font-size: 12.5px;
-      line-height: 1.6;
-      color: var(--text)
+      font-size: 13px;
+      line-height: 1.6
     }
 
-    /* ---------- ranks ---------- */
     .ranks {
-      display: flex;
-      flex-direction: column
+      background: var(--card);
+      border: 1px solid var(--rule);
+      border-radius: 9px;
+      overflow: hidden
     }
 
     .rk {
       display: grid;
-      grid-template-columns: 118px 1fr;
-      gap: 20px;
+      grid-template-columns: 120px 150px 1fr;
+      gap: 18px;
       align-items: baseline;
-      padding: 13px 4px;
-      border-bottom: 1px solid var(--rule);
+      padding: 14px 20px;
+      border-top: 1px solid var(--rule-2)
     }
 
     .rk:first-child {
-      border-top: 1px solid var(--rule)
+      border-top: 0
     }
 
     .rk b {
-      font-size: 11.5px;
+      font-size: 12px;
       color: var(--dim);
-      font-variant-numeric: tabular-nums;
-      font-weight: 400
+      font-weight: 400;
+      font-variant-numeric: tabular-nums
     }
 
     .rk em {
       font-family: var(--display);
       font-style: normal;
-      font-weight: 600;
+      font-weight: 800;
       font-size: 16px;
-      color: var(--vellum);
-      letter-spacing: .03em;
+      letter-spacing: .02em
     }
 
     .rk i {
       font-style: normal;
-      font-size: 12px;
-      color: var(--dim);
-      margin-left: 12px
-    }
-
-    .rk:last-child em {
-      color: var(--crimson)
-    }
-
-    .rk:first-child em {
-      color: var(--guild)
+      font-size: 12.5px;
+      color: var(--dim)
     }
 
     footer {
       border-top: 1px solid var(--rule);
-      padding: 30px 0 44px;
+      padding: 28px 0 46px;
       display: flex;
       justify-content: space-between;
       gap: 18px;
       flex-wrap: wrap;
-      font-size: 11px;
-      color: var(--dim);
+      font-size: 12px;
+      color: var(--dim)
     }
 
     footer a {
-      color: var(--text);
+      color: var(--ink-2);
       text-decoration: none;
       border-bottom: 1px solid var(--rule)
     }
 
     footer a:hover {
-      color: var(--vellum)
+      color: var(--ink)
     }
 
-    @media (max-width:900px) {
+    @media (max-width:960px) {
       .hero {
         grid-template-columns: 1fr;
         gap: 44px;
-        padding: 52px 0 48px
+        padding: 36px 0 52px
+      }
+
+      .tagline {
+        max-width: 34ch
       }
 
       .glossary {
@@ -645,48 +645,45 @@
       }
     }
 
-    @media (max-width:620px) {
+    @media (max-width:660px) {
       .wrap {
         padding: 0 18px
       }
 
-      .row {
-        grid-template-columns: 26px 1fr auto;
-        gap: 12px;
-        row-gap: 4px
+      .masthead p {
+        display: none
       }
 
-      .math {
-        grid-column: 2/4;
-        font-size: 10.5px
+      .panel-grid {
+        grid-template-columns: 1fr;
+        gap: 18px
+      }
+
+      .divider {
+        width: 100%;
+        height: 1px;
+        min-height: 0
       }
 
       .glossary {
         grid-template-columns: 1fr
       }
 
+      .cols,
+      .row {
+        grid-template-columns: 26px 76px 1fr;
+        gap: 10px
+      }
+
       .rk {
         grid-template-columns: 1fr;
-        gap: 2px
-      }
-
-      .rk i {
-        margin-left: 0;
-        display: block
-      }
-
-      .seal {
-        width: 72px;
-        height: 72px;
-        right: -8px;
-        bottom: -8px
+        gap: 3px
       }
     }
 
     @media (prefers-reduced-motion:reduce) {
       * {
-        transition: none !important;
-        animation: none !important
+        transition: none !important
       }
     }
   </style>
@@ -696,198 +693,194 @@
   <div class="wrap">
 
     <header class="masthead">
-      <div class="mark">LARP<span>·</span>CHECK</div>
-      <div class="eyebrow">Guild of Applied LARPing<br>Est. MMXXIV</div>
+      <div class="brand"><i></i> larpcheck</div>
+      <p>an audit of how much of your code you actually wrote &nbsp;·&nbsp; <b>guild of applied larping</b></p>
     </header>
 
     <div class="hero">
       <div>
-        <p class="eyebrow">An audit, not a vibe check</p>
-        <h1>Am I <em>larping</em>?</h1>
-        <p class="lede">Your coding agent has the receipts. It knows exactly how many words you typed and how many lines
-          it wrote. <b>Ask it for the ratio.</b></p>
-
-        <div class="install">
-          <div class="cmd">
-            <code
-              id="cmd">npx skills add <b>glasspollution/larpcheck</b> --agent claude-code codex cursor --global --yes</code>
-            <button class="copy" id="copy" aria-label="Copy install command">Copy</button>
-          </div>
-          <p class="then">Then <code>/larpcheck</code> in Claude Code, or <code>$larpcheck</code> in Codex.</p>
-          <div class="agents">
-            <span>Claude Code</span><span>Codex</span><span>Cursor</span><span>+70 agents</span>
-          </div>
+        <h1>larpcheck</h1>
+        <p class="tagline">Find out how much of your code you actually wrote.</p>
+        <button class="btn" id="copyBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" />
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+          </svg>
+          Copy skill install
+        </button>
+        <div class="tiles" aria-label="supported agents">
+          <span title="Claude Code"><img src="https://cdn.simpleicons.org/anthropic/D4793B" alt="Claude Code" class="tile-logo"></span>
+          <span title="Codex">
+            <svg class="tile-logo" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-label="Codex (OpenAI)">
+              <path d="M22.282 9.821a5.985 5.985 0 00-.516-4.91 6.046 6.046 0 00-6.51-2.9A6.065 6.065 0 0011.01.833a5.984 5.984 0 00-5.716 4.14 6.02 6.02 0 00-4.013 2.916 6.046 6.046 0 00.753 7.079 5.98 5.98 0 00.51 4.911 6.051 6.051 0 006.515 2.9A5.985 5.985 0 0013.26 23.1a6.04 6.04 0 005.718-4.146 6.02 6.02 0 004.01-2.92 6.041 6.041 0 00-.706-7.213zm-9.022 12.61a4.475 4.475 0 01-2.869-1.04l.141-.081 4.755-2.745a.783.783 0 00.395-.681v-6.706l2.01 1.16a.071.071 0 01.038.052v5.554a4.503 4.503 0 01-4.47 4.487zm-9.63-4.12a4.47 4.47 0 01-.536-3.014l.142.085 4.754 2.745a.77.77 0 00.785 0l5.808-3.354v2.317a.07.07 0 01-.028.061L9.019 19.85a4.5 4.5 0 01-5.39-.539zm-1.252-10.39a4.47 4.47 0 012.321-1.966V11.2a.77.77 0 00.39.68l5.8 3.349-2.01 1.159a.073.073 0 01-.068 0L5.55 13.046a4.5 4.5 0 01-.672-5.125zm16.52 3.864l-5.807-3.354 2.01-1.158a.071.071 0 01.068 0l4.378 2.528a4.5 4.5 0 01-.676 8.117V12.4a.77.77 0 00-.392-.681zm2.001-3.025l-.142-.085-4.754-2.745a.777.777 0 00-.785 0L9.41 9.25V6.933a.07.07 0 01.028-.061l4.378-2.526a4.5 4.5 0 016.62 4.668zm-12.61 4.135l-2.01-1.158a.07.07 0 01-.038-.053v-5.554a4.5 4.5 0 017.375-3.453l-.142.08-4.754 2.745a.783.783 0 00-.395.681zm1.092-2.354l2.587-1.493 2.587 1.493v2.985l-2.587 1.493-2.587-1.493z"/>
+            </svg>
+          </span>
+          <span title="Cursor"><img src="https://cdn.simpleicons.org/cursor/000000" alt="Cursor" class="tile-logo"></span>
         </div>
       </div>
 
-      <div class="sheet">
-        <div class="sheet-hd">Character Sheet · Specimen</div>
-        <p class="rank">Full Costume</p>
-        <p class="ratio">1,204<small> : 1</small></p>
-        <p class="basis">812 words typed · 977,648 lines shipped</p>
-
-        <div class="stats">
-          <div class="stat"><b>Vagueness</b>
-            <div class="track"><span class="fill" style="width:80%"></span></div><i>16</i>
-          </div>
-          <div class="stat"><b>Blind faith</b>
-            <div class="track"><span class="fill" style="width:90%"></span></div><i>18</i>
-          </div>
-          <div class="stat"><b>Paste</b>
-            <div class="track"><span class="fill" style="width:55%"></span></div><i>11</i>
-          </div>
-          <div class="stat"><b>Deference</b>
-            <div class="track"><span class="fill" style="width:70%"></span></div><i>14</i>
+      <div class="win">
+        <div class="win-bar">
+          <div class="dots"><i></i><i></i><i></i></div>
+          <div class="tabs" role="tablist">
+            <button class="tab" role="tab" aria-selected="true" data-scope="all">TOP</button>
+            <button class="tab" role="tab" aria-selected="false" data-scope="day">LATEST</button>
           </div>
         </div>
 
-        <div class="trophy">
-          <p class="eyebrow">Best performance</p>
-          <q>make it prettier</q>
-          <p>3 words → 13,236 lines · 4,412 : 1</p>
-        </div>
+        <div class="win-body">
+          <div class="panel">
+            <div class="panel-tag">larpcheck v0.1</div>
+            <div class="panel-grid">
+              <div class="score">
+                <p class="lbl" id="scoreLbl">Top ratio</p>
+                <span class="badge" id="badge">4,412 : 1</span>
+                <p class="tier" id="tier">thought leader</p>
+                <p class="meta" id="meta">3 words → 13,236 lines</p>
+              </div>
+              <div class="divider"></div>
+              <p class="blurb">Runs inside your agent, reads its own local chat history, and posts only your single most
+                LARP prompt.</p>
+            </div>
+          </div>
 
-        <div class="seal" aria-hidden="true"><span>CERTIFIED<br>LARP<br>ENGINEER</span></div>
+          <div class="cmd">
+            <code
+              id="cmd"><i>›</i>npx skills add <b>glasspollution/larpcheck</b> --agent claude-code codex cursor --global --yes</code>
+            <button class="icopy" id="iconCopy" aria-label="Copy install command">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <rect x="9" y="9" width="13" height="13" rx="2" />
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+              </svg>
+            </button>
+          </div>
+          <p class="then">then <code>/larpcheck</code> in Claude Code, or <code>$larpcheck</code> in Codex</p>
+
+          <div class="ledger-hd">
+            <b id="ledgerTitle">top ratios</b>
+            <span id="ledgerMeta">live · 312 audits</span>
+          </div>
+          <div class="cols">
+            <div>RANK</div>
+            <div>RATIO</div>
+            <div>PROMPT</div>
+          </div>
+          <div id="ledger"></div>
+        </div>
       </div>
     </div>
 
-    <section>
-      <div class="sec-hd">
-        <div>
-          <p class="eyebrow">The ledger</p>
-          <h2>Most lines shipped per word typed</h2>
-          <p class="note">One entry per audit. Only the winning prompt is ever posted, and only if you say so.</p>
-        </div>
-        <div class="tabs" role="tablist">
-          <button class="tab" role="tab" aria-selected="false" data-scope="day">Today</button>
-          <button class="tab" role="tab" aria-selected="true" data-scope="all">All time</button>
-        </div>
-      </div>
-      <div class="ledger" id="ledger"></div>
-    </section>
-
-    <section>
-      <p class="eyebrow">The stat block</p>
-      <h2 style="margin-bottom:26px">Four numbers, none of them flattering</h2>
-      <div class="glossary">
-        <div class="gcell">
-          <h3>Vagueness</h3>
-          <p>How little you said to get how much. “make it work properly” is a 20. Pasting a spec is a 3.</p>
-        </div>
-        <div class="gcell">
-          <h3>Blind faith</h3>
-          <p>Diffs you approved without ever opening the file afterwards. The bravest stat on the sheet.</p>
-        </div>
-        <div class="gcell">
-          <h3>Paste</h3>
-          <p>Turns that were a stack trace and nothing else. No greeting, no theory, no words.</p>
-        </div>
-        <div class="gcell">
-          <h3>Deference</h3>
-          <p>Times your agent told you that you were absolutely right. Counts arguments you won but shouldn’t have
-            entered.</p>
-        </div>
-      </div>
-    </section>
-
-    <section>
-      <p class="eyebrow">Guild ranks</p>
-      <h2 style="margin-bottom:26px">By lines shipped per word typed</h2>
-      <div class="ranks">
-        <div class="rk"><b>under 50</b>
-          <div><em>Civilian</em><i>Appears to type their own code. Under review.</i></div>
-        </div>
-        <div class="rk"><b>50 – 199</b>
-          <div><em>Weekend LARPer</em><i>Still reads the diffs. On weekdays.</i></div>
-        </div>
-        <div class="rk"><b>200 – 799</b>
-          <div><em>Method Actor</em><i>Has started saying “we” about the agent.</i></div>
-        </div>
-        <div class="rk"><b>800 – 1,999</b>
-          <div><em>Full Costume</em><i>Owns a mechanical keyboard. Uses four keys.</i></div>
-        </div>
-        <div class="rk"><b>2,000 – 4,999</b>
-          <div><em>Thought Leader</em><i>Ships more per word than any writer alive.</i></div>
-        </div>
-        <div class="rk"><b>5,000 +</b>
-          <div><em>Founder</em><i>Has not written code since 2024.</i></div>
-        </div>
-      </div>
-    </section>
-
     <footer>
       <div>Runs locally. Reads your agent’s own transcripts. Uploads one prompt, with permission.</div>
-      <div><a href="#">skill source</a> · <a href="#">what gets sent</a></div>
+      <div><a href="https://github.com/glasspollution/larpcheck">source</a></div>
     </footer>
-
   </div>
 
   <script>
-    // Copy install command
-    var btn = document.getElementById('copy');
-    btn.addEventListener('click', function () {
-      var text = document.getElementById('cmd').innerText;
+    var TIERS = [
+      { max: 49, name: 'civilian', v: '--t1' },
+      { max: 199, name: 'weekend larper', v: '--t2' },
+      { max: 799, name: 'method actor', v: '--t3' },
+      { max: 1999, name: 'full costume', v: '--t4' },
+      { max: 4999, name: 'thought leader', v: '--t5' },
+      { max: Infinity, name: 'founder', v: '--t6' }
+    ];
+    var tierFor = function (r) { for (var i = 0; i < TIERS.length; i++) if (r <= TIERS[i].max) return TIERS[i]; };
+    var fmt = function (n) { return Number(n).toLocaleString('en-US'); };
+    var esc = function (s) {
+      return String(s == null ? '' : s).replace(/[&<>"']/g, function (ch) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch];
+      });
+    };
+
+    var SEED = [
+      { prompt: 'fix', words: 1, lines: 8102, handle: 'anonymous', agent: 'codex' },
+      { prompt: 'make it prettier', words: 3, lines: 13236, handle: 'anonymous', agent: 'claude-code' },
+      { prompt: 'you know what I mean', words: 5, lines: 16890, handle: '@shipfast', agent: 'claude-code' },
+      { prompt: 'same as the other one', words: 5, lines: 14220, handle: 'anonymous', agent: 'cursor' },
+      { prompt: 'just make it work', words: 4, lines: 9880, handle: '@notaphd', agent: 'claude-code' },
+      { prompt: 'do it properly this time', words: 5, lines: 5400, handle: 'anonymous', agent: 'codex' },
+      { prompt: 'idk you decide', words: 4, lines: 1320, handle: 'anonymous', agent: 'codex' }
+    ];
+
+    function copy(text, el) {
       var done = function () {
-        btn.textContent = 'Copied';
-        btn.classList.add('done');
-        setTimeout(function () { btn.textContent = 'Copy'; btn.classList.remove('done'); }, 1800);
+        el.classList.add('done');
+        setTimeout(function () { el.classList.remove('done'); }, 1700);
       };
-      if (navigator.clipboard) { navigator.clipboard.writeText(text).then(done, done); }
+      if (navigator.clipboard) navigator.clipboard.writeText(text).then(done, done);
       else {
         var t = document.createElement('textarea');
         t.value = text; document.body.appendChild(t); t.select();
         try { document.execCommand('copy'); } catch (e) { }
         document.body.removeChild(t); done();
       }
+    }
+    var cmdText = function () {
+      return document.getElementById('cmd').innerText.replace(/^›\s*/, '').trim();
+    };
+    var big = document.getElementById('copyBtn');
+    big.addEventListener('click', function () {
+      copy(cmdText(), big);
+      var l = big.childNodes[big.childNodes.length - 1];
+      l.nodeValue = ' Copied';
+      setTimeout(function () { l.nodeValue = ' Copy skill install'; }, 1700);
+    });
+    document.getElementById('iconCopy').addEventListener('click', function () {
+      copy(cmdText(), this);
     });
 
-    // Seed entries so the page is never empty on launch day.
-    var SEED = [
-      { prompt: "make it prettier", words: 3, lines: 13236, handle: "anonymous", agent: "claude-code" },
-      { prompt: "fix", words: 1, lines: 4102, handle: "@dhh_fan", agent: "cursor" },
-      { prompt: "you know what I mean", words: 5, lines: 16890, handle: "anonymous", agent: "codex" },
-      { prompt: "same as the other one", words: 5, lines: 14220, handle: "@shipfast", agent: "claude-code" },
-      { prompt: "just make it work", words: 4, lines: 9880, handle: "anonymous", agent: "claude-code" },
-      { prompt: "do it properly this time", words: 5, lines: 11400, handle: "@notaphd", agent: "cursor" },
-      { prompt: "idk you decide", words: 4, lines: 7320, handle: "anonymous", agent: "codex" }
-    ];
+    function render(rows, scope) {
+      rows.forEach(function (r) { r.ratio = r.ratio || Math.round(r.lines / Math.max(r.words, 1)); });
+      rows.sort(function (a, b) {
+        return scope === 'day' ? (b.at || 0) - (a.at || 0) : b.ratio - a.ratio;
+      });
 
-    var fmt = function (n) { return n.toLocaleString('en-US'); };
+      var lead = rows.slice().sort(function (a, b) { return b.ratio - a.ratio; })[0];
+      if (lead) {
+        var t = tierFor(lead.ratio);
+        var badge = document.getElementById('badge');
+        badge.textContent = fmt(lead.ratio) + ' : 1';
+        badge.style.background = 'var(' + t.v + ')';
+        var tierEl = document.getElementById('tier');
+        tierEl.textContent = t.name;
+        tierEl.style.color = 'var(' + t.v + ')';
+        document.getElementById('meta').textContent =
+          fmt(lead.words) + ' words → ' + fmt(lead.lines) + ' lines';
+      }
 
-    function render(rows) {
+      document.getElementById('ledgerTitle').textContent = scope === 'day' ? 'latest audits' : 'top ratios';
+      document.getElementById('ledgerMeta').textContent = 'live · ' + fmt(rows.length) + ' audits';
+
       var el = document.getElementById('ledger');
       if (!rows.length) {
         el.innerHTML = '<div class="empty">No audits posted yet. Be the first to incriminate yourself.</div>';
         return;
       }
-      rows.forEach(function (r) { r.ratio = r.ratio || Math.round(r.lines / Math.max(r.words, 1)); });
-      rows.sort(function (a, b) { return b.ratio - a.ratio; });
-      el.innerHTML = rows.slice(0, 10).map(function (r, i) {
+      el.innerHTML = rows.slice(0, 7).map(function (r, i) {
+        var t = tierFor(r.ratio);
         return '<div class="row">'
-          + '<div class="pos">' + (i + 1) + '</div>'
-          + '<div><div class="prompt">' + esc(r.prompt) + '</div>'
-          + '<div class="who">' + esc(r.handle || 'anonymous') + ' · ' + esc(r.agent || 'unknown') + '</div></div>'
-          + '<div class="math">' + r.words + ' words<br>' + fmt(r.lines) + ' lines</div>'
-          + '<div class="score">' + fmt(r.ratio) + ' <s>: 1</s></div>'
+          + '<div class="pos">#' + (i + 1) + '</div>'
+          + '<div class="sbox">'
+          + '<b style="background:var(' + t.v + ')">' + fmt(r.ratio) + '</b>'
+          + '<s style="color:var(' + t.v + ')">' + t.name + '</s>'
+          + '</div>'
+          + '<div class="txt"><p>' + esc(r.prompt) + '</p>'
+          + '<span>' + r.words + ' words → ' + fmt(r.lines) + ' lines · ' + esc(r.handle || 'anonymous') + '</span></div>'
           + '</div>';
       }).join('');
     }
 
-    function esc(s) {
-      return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
-        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
-      });
-    }
-
     var scope = 'all';
     function load() {
-      render(SEED); // paint immediately
+      render(SEED.slice(), scope);
       fetch('/api/leaderboard?scope=' + scope)
         .then(function (r) { return r.ok ? r.json() : null; })
-        .then(function (d) { if (d && Array.isArray(d.entries) && d.entries.length) render(d.entries); })
-        .catch(function () { /* seed stays */ });
+        .then(function (d) { if (d && d.entries && d.entries.length) render(d.entries, scope); })
+        .catch(function () { });
     }
-
     Array.prototype.forEach.call(document.querySelectorAll('.tab'), function (tab) {
       tab.addEventListener('click', function () {
         Array.prototype.forEach.call(document.querySelectorAll('.tab'), function (t) {
@@ -897,7 +890,6 @@
         load();
       });
     });
-
     load();
   </script>
 </body>
